@@ -37,8 +37,62 @@ Estimativa de população (Tabela 6579 do sidra)
 
 A razão entre: a quantidade de firmas fundadas em 2 anos (2017 e 2018) ativas em 2020, dividido pela quantidade de firmas fundadas em 2 anos (2017 e 2018) ativas em 2019.
 
-\textbf{Problema:} existem menos firmas ativas no ano Y, fundadas no ano X, que firmas no ano X+1, fundadas no ano X. AAAAAAAAAAAAAAAAAAAAAAABBB
+\textbf{Problema:} existem menos firmas ativas no ano Y, fundadas no ano X, que firmas no ano X+1, fundadas no ano X.
 
 ```{r}
-1 + 1
+rm(list = ls())
+
+library(sidrar)  
+library(dplyr)  
+library(magrittr)
+library(tidyr)
+
+cod_sidra <- "/t/993/n6/1100205,1200401,1302603,1400100,1501402,1600303,2111300,2211001,2304400,2408102,2507507,2611606,2704302,2800308,2927408,3106200,3205309,3304557,3550308,4106902,4205407,4314902,5103403,5002704,5208707,5300108,1721000/v/allxp/p/last%205/c12762/0/c319/0/c12386/41127,47175,47965,49474,57244"
+
+cempre <- get_sidra(api = cod_sidra)
+
+cempre <- cempre %>%
+  select(`Município (Código)`, `Município`, Ano,`Ano de fundação`,Valor) %>%
+  filter(!is.na(Valor))
+
+#cempre <- cempre %>%
+#  filter(Ano!=`Ano de fundação`) # esse filtro devido a incongruencia de dados recentes
+
+cempre1 <- cempre %>%
+  filter(`Ano de fundação` == 2017 | `Ano de fundação` == 2018) %>%
+  filter(Ano == 2019 | Ano == 2020) %>%
+  group_by(Ano,`Município (Código)`,Município) %>%
+  mutate(temp = sum(Valor)) %>% 
+  ungroup()
+
+cempre2 <- cempre1 %>%
+  select(-`Ano de fundação`,-Valor) %>% 
+  unique()
+  
+cempre3 <- cempre2 %>%
+  pivot_wider(names_from = Ano, values_from = temp)
+
+cempre_final <- cempre3 %>%
+  mutate(frac=`2020`/`2019`)
+
+cod_demografia <- "/t/6579/n6/1100205,1200401,1302603,1400100,1501402,1600303,2111300,2211001,2304400,2408102,2507507,2611606,2704302,2800308,2927408,3106200,3205309,3304557,3550308,4106902,4205407,4314902,5103403,5002704,5208707,5300108,1721000/v/all/p/last%208"
+
+demografia_the <-get_sidra(api = cod_demografia)
+
+demografia_the <- demografia_the %>%
+                  mutate(Ano = as.numeric(Ano)) %>% 
+                  select(Ano,Valor,`Município (Código)`) %>% 
+                  rename(popestimada = Valor) %>%
+                  filter(Ano==2020)
+
+demografia_the %<>% mutate(pop100000 = popestimada/100000)
+
+survive <- left_join(cempre_final, demografia_the)
+survive %<>% mutate(indexsuvivor = frac/pop100000) 
+
+library(ggplot2)
+
+ggplot(survive, aes(pop100000, frac, colour = Município)) + 
+  geom_point()
+
 ```
