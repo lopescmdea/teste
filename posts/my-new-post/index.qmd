@@ -1,0 +1,12 @@
+---
+title: "Hello"
+author: "Caio Lopes"
+date: "2022-10-30"
+categories: [uau]
+---
+
+This is a post with executable code.
+
+```{r}
+1 + 1
+```
