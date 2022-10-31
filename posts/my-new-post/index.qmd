@@ -37,7 +37,7 @@ Estimativa de população (Tabela 6579 do sidra)
 
 A razão entre: a quantidade de firmas fundadas em 2 anos (2017 e 2018) ativas em 2020, dividido pela quantidade de firmas fundadas em 2 anos (2017 e 2018) ativas em 2019.
 
-\textbf{Problema:} existem menos firmas ativas no ano Y, fundadas no ano X, que firmas no ano X+1, fundadas no ano X. AAAAAAAAAAAAAAAAAAAAAAA
+\textbf{Problema:} existem menos firmas ativas no ano Y, fundadas no ano X, que firmas no ano X+1, fundadas no ano X. AAAAAAAAAAAAAAAAAAAAAAABBB
 
 ```{r}
 1 + 1
