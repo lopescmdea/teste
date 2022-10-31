@@ -9,5 +9,24 @@ image: "image.jpg"
 kjnjno
 
 ```{r}
-1 + 1
+#| echo: true
+#| eval: true
+#| include: true
+rm(list = ls())
+
+library(sidrar) # CRAN v0.2.7 
+library(dplyr) # CRAN v1.0.7 
+library(magrittr)
+library(tidyr)
+
+#5.4 Porcentagem da força de trabalho empregada em ocupações nos setores de educação, pesquisa e desenvolvimento
+
+cod_sidra <- "/t/6449/n6/1100205,1200401,1302603,1400100,1501402,1600303,2111300,2211001,2304400,2408102,2507507,2611606,2704302,2800308,2927408,3106200,3205309,3304557,3550308,4106902,4205407,4314902,5103403,5002704,5208707,5300108,1721000/v/2585,1000707/p/last%204/c12762/117159,117179,117693,117695,117790,117794,117796,117800,117803/d/v1000707%202"
+
+# Coleta dos dados com o código
+cempre6449_educ <- get_sidra(api = cod_sidra)
+
+cempre6449_educ <- cempre6449_educ %>%
+          filter(`Variável (Código)`==1000707)
+
 ```
